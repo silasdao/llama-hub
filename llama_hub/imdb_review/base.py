@@ -14,11 +14,11 @@ class IMDBReviews(BaseReader):
         webdriver_engine: str = "edge",
         generate_csv: bool = False,
     ):
-        assert webdriver_engine in [
+        assert webdriver_engine in {
             "google",
             "edge",
             "firefox",
-        ], "The webdriver should be in ['google','edge','firefox']"
+        }, "The webdriver should be in ['google','edge','firefox']"
         self.movie_name_year = movie_name_year
         self.webdriver_engine = webdriver_engine
         self.generate_csv = generate_csv
@@ -33,15 +33,13 @@ class IMDBReviews(BaseReader):
             self.movie_name_year, self.webdriver_engine, self.generate_csv
         )
 
-        all_docs = []
-        for i in range(len(reviews_date)):
-            all_docs.append(
-                Document(
-                    text=reviews_title[i] + " " + reviews_comment[i],
-                    extra_info={"date": reviews_date[i], "rating": reviews_rating[i]},
-                )
+        return [
+            Document(
+                text=f"{reviews_title[i]} {reviews_comment[i]}",
+                extra_info={"date": reviews_date[i], "rating": reviews_rating[i]},
             )
-        return all_docs
+            for i in range(len(reviews_date))
+        ]
 
 
 # if __name__ == '__main__':
